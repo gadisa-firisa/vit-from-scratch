@@ -1,0 +1,19 @@
+[project]
+name = "vit-from-scratch"
+version = "0.1.0"
+description = "Vision Transformer implementation from scratch"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch",
+    "torchvision",
+    "tqdm",
+    "pillow",
+    "datasets",
+    "wandb",
+    "python-dotenv",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

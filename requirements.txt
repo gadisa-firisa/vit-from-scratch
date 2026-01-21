@@ -1,0 +1,8 @@
+torch
+torchvision
+tqdm
+pillow
+datasets
+wandb
+python-dotenv
+
