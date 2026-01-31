@@ -3,43 +3,6 @@ import torch.nn as nn
 from dataclasses import dataclass 
 from typing import List, Optional, Tuple
 
-@dataclass 
-class ViTConfig: 
-    image_size: int = 224 
-    patch_size: int = 16 
-    num_channels: int = 3 
-    num_classes: int = 1000 
-    hidden_size: int = 768 
-    num_heads: int = 12 
-    num_layers: int = 12 
-    mlp_ratio: float = 4.0 
-    qkv_bias: bool = True 
-    qk_scale: Optional[float] = None 
-    drop_rate: float = 0.0 
-    attn_drop_rate: float = 0.0 
-    drop_path_rate: float = 0.0     
-    embed_drop_rate: float = 0.0 
-    use_abs_pos: bool = True 
-    use_rel_pos: bool = False 
-    rel_pos_zero_init: bool = True 
-    window_size: int = 14 
-    global_attn_indexes: Optional[List[int]] = None 
-    patch_norm: bool = True 
-    use_checkpoint: bool = False 
-    use_auth: bool = False 
-    learning_rate: float = 1e-4 
-    betas: Tuple[float, float] = (0.9, 0.999) 
-    epsilon: float = 1e-8 
-
-    @property
-    def num_patches(self) -> int:
-        return (self.image_size // self.patch_size) ** 2
-
-    @property
-    def inv_sqrt_dk(self) -> float:
-        head_dim = self.hidden_size // self.num_heads
-        return head_dim ** -0.5
-
 class GELU(nn.Module): 
     def __init__(self, config: ViTConfig, approx: str = 'none'): 
         super().__init__() 
