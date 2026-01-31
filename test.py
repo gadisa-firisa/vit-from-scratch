@@ -5,17 +5,18 @@ import os
 from tqdm import tqdm 
 from vit_from_scratch.model.vit import Vit   
 from vit_from_scratch.dataset import get_dataset 
-from vit_from_scratch.utils import ViTConfig
+from vit_from_scratch.config import ViTConfig, TrainingConfig
 from torchvision import transforms
 from torch.utils.data import DataLoader
 
 def parse_args():
+    config = TrainingConfig()
     parser = argparse.ArgumentParser(description='Evaluate ViT')
-    parser.add_argument('--dataset_name', type=str, default='beans', help='Name of the Hugging Face dataset')
-    parser.add_argument('--split', type=str, default='test', help='Split to evaluate on')
+    parser.add_argument('--dataset_name', type=str, default=config.dataset_name, help='Name of the Hugging Face dataset')
+    parser.add_argument('--split', type=str, default=config.test_split, help='Split to evaluate on')
     parser.add_argument('--checkpoint', type=str, required=True, help='Path to model checkpoint')
-    parser.add_argument('--batch_size', type=int, default=32, help='Batch size')
-    parser.add_argument('--seed', type=int, default=42, help='Random seed')
+    parser.add_argument('--batch_size', type=int, default=config.batch_size, help='Batch size')
+    parser.add_argument('--seed', type=int, default=config.seed, help='Random seed')
     return parser.parse_args()
 
 def main():
@@ -24,10 +25,10 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"Using device: {device}")
     
-    config = ViTConfig()
+    vit_config = ViTConfig()
     
     transform = transforms.Compose([
-        transforms.Resize((config.image_size, config.image_size)),
+        transforms.Resize((vit_config.image_size, vit_config.image_size)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
     ])
@@ -36,7 +37,7 @@ def main():
     dataset = get_dataset(args.dataset_name, split=args.split, transform=transform)
     
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=0)
-    model = Vit(config).to(device)
+    model = Vit(vit_config).to(device)
     
     if not os.path.exists(args.checkpoint):
         print(f"Error: Checkpoint file {args.checkpoint} not found.")

@@ -7,7 +7,8 @@ import random
 from tqdm import tqdm 
 from vit_from_scratch.model.vit import Vit   
 from vit_from_scratch.dataset import get_dataset 
-from vit_from_scratch.utils import ViTConfig, AdamW
+from vit_from_scratch.config import ViTConfig, TrainingConfig
+from vit_from_scratch.utils import AdamW
 from torchvision import transforms
 from torch.utils.data import DataLoader
 from dotenv import load_dotenv
@@ -20,17 +21,19 @@ WANDB_PROJECT_NAME = os.getenv('WANDB_PROJECT_NAME', 'vit-from-scratch')
 
 
 def parse_args():
+    train_config = TrainingConfig()
+
     parser = argparse.ArgumentParser(description='Train ViT from scratch')
-    parser.add_argument('--dataset_name', type=str, default='beans', help='Name of the Hugging Face dataset (e.g. beans, cifar10)')
-    parser.add_argument('--split', type=str, default='train', help='Split to evaluate on')
-    parser.add_argument('--val_split', type=str, default='validation', help='Split to validate on')
-    parser.add_argument('--batch_size', type=int, default=32, help='Batch size')
-    parser.add_argument('--epochs', type=int, default=10, help='Number of epochs')
-    parser.add_argument('--lr', type=float, default=1e-3, help='Learning rate')
-    parser.add_argument('--weight_decay', type=float, default=0.01, help='Weight decay')
-    parser.add_argument('--save_dir', type=str, default='./checkpoints', help='Directory to save checkpoints')
-    parser.add_argument('--max_checkpoints', type=int, default=5, help='Maximum number of checkpoints to keep')
-    parser.add_argument('--seed', type=int, default=42, help='Random seed')
+    parser.add_argument('--dataset_name', type=str, default=train_config.dataset_name, help='Name of the Hugging Face dataset (e.g. beans, cifar10)')
+    parser.add_argument('--split', type=str, default=train_config.train_split, help='Split to evaluate on')
+    parser.add_argument('--val_split', type=str, default=train_config.val_split, help='Split to validate on')
+    parser.add_argument('--batch_size', type=int, default=train_config.batch_size, help='Batch size')
+    parser.add_argument('--epochs', type=int, default=train_config.num_epochs, help='Number of epochs')
+    parser.add_argument('--lr', type=float, default=train_config.learning_rate, help='Learning rate')
+    parser.add_argument('--weight_decay', type=float, default=train_config.weight_decay, help='Weight decay')
+    parser.add_argument('--save_dir', type=str, default=train_config.save_dir, help='Directory to save checkpoints')
+    parser.add_argument('--max_checkpoints', type=int, default=train_config.max_checkpoints, help='Maximum number of checkpoints to keep')
+    parser.add_argument('--seed', type=int, default=train_config.seed, help='Random seed')
     return parser.parse_args()
 
 def set_seed(seed):
