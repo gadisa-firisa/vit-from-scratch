@@ -1,6 +1,6 @@
 import torch 
 import torch.nn as nn 
-from ..utils import ViTConfig
+from ..config import ViTConfig
 from .encoder import Encoder
 
 class VitEmbeddings(nn.Module): 

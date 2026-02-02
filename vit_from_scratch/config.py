@@ -30,6 +30,7 @@ class ViTConfig:
 
     @property
     def num_patches(self) -> int:
+        assert self.image_size % self.patch_size == 0, "image_size must be divisible by patch_size"
         return (self.image_size // self.patch_size) ** 2
 
     @property

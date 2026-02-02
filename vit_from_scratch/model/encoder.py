@@ -1,6 +1,7 @@
 import torch 
 import torch.nn as nn 
-from ..utils import ViTConfig, GELU
+from ..utils import GELU
+from ..config import ViTConfig
 
 class VitMLP(nn.Module): 
     def __init__(self, config: ViTConfig): 
