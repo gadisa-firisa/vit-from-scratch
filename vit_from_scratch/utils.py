@@ -2,6 +2,20 @@ import torch
 import torch.nn as nn 
 from dataclasses import dataclass 
 from typing import List, Optional, Tuple
+from vit_from_scratch.config import ViTConfig
+
+class LayerNorm(nn.Module): 
+    def __init__(self, config: ViTConfig): 
+        super().__init__() 
+        self.config = config 
+        self.gamma = nn.Parameter(torch.ones(config.hidden_size)) 
+        self.beta = nn.Parameter(torch.zeros(config.hidden_size)) 
+    
+    def forward(self, x: torch.Tensor) -> torch.Tensor: 
+        mean = x.mean(dim=-1, keepdim=True)
+        var = x.var(dim=-1, keepdim=True, unbiased=False)
+        inv_std = torch.rsqrt(var + self.config.epsilon)
+        return (x - mean) * inv_std * self.gamma + self.beta
 
 class GELU(nn.Module): 
     def __init__(self, config: ViTConfig, approx: str = 'none'): 

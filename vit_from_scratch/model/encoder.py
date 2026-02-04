@@ -1,6 +1,6 @@
 import torch 
 import torch.nn as nn 
-from ..utils import GELU
+from ..utils import GELU, LayerNorm
 from ..config import ViTConfig
 
 class VitMLP(nn.Module): 
@@ -10,8 +10,10 @@ class VitMLP(nn.Module):
         self.act = GELU(config, approx='none') 
         self.fc2 = nn.Linear(int(config.hidden_size * config.mlp_ratio), config.hidden_size) 
         self.drop = nn.Dropout(config.drop_rate) 
-    
+        self.layer_norm = LayerNorm(config)
+
     def forward(self, x: torch.Tensor) -> torch.Tensor: 
+        x = self.layer_norm(x)
         x = self.fc1(x) 
         x = self.act(x) 
         x = self.drop(x) 
