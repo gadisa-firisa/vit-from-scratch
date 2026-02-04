@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn 
 from ..config import ViTConfig
 from .encoder import Encoder
+from ..utils import LayerNorm
 
 class VitEmbeddings(nn.Module): 
     def __init__(self, config: ViTConfig): 
@@ -37,7 +38,7 @@ class Vit(nn.Module):
         super().__init__() 
         self.config = config 
         self.block = VitBlock(config) 
-        self.norm = nn.LayerNorm(config.hidden_size)
+        self.norm = LayerNorm(config)
         self.head = nn.Linear(config.hidden_size, config.num_classes)
         
     def extract_features(self, x: torch.Tensor) -> torch.Tensor:

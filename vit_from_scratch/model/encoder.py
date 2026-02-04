@@ -10,10 +10,8 @@ class VitMLP(nn.Module):
         self.act = GELU(config, approx='none') 
         self.fc2 = nn.Linear(int(config.hidden_size * config.mlp_ratio), config.hidden_size) 
         self.drop = nn.Dropout(config.drop_rate) 
-        self.layer_norm = LayerNorm(config)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor: 
-        x = self.layer_norm(x)
         x = self.fc1(x) 
         x = self.act(x) 
         x = self.drop(x) 
@@ -47,8 +45,8 @@ class EncoderLayer(nn.Module):
         super().__init__() 
         self.attention = VitAttention(config) 
         self.mlp = VitMLP(config) 
-        self.ln1 = nn.LayerNorm(config.hidden_size) 
-        self.ln2 = nn.LayerNorm(config.hidden_size) 
+        self.ln1 = LayerNorm(config) 
+        self.ln2 = LayerNorm(config) 
     
     def forward(self, x: torch.Tensor) -> torch.Tensor: 
         x = x + self.attention(self.ln1(x)) 
